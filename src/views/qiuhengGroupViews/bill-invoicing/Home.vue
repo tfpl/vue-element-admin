@@ -59,14 +59,14 @@
           <!--开票记录列表-->
           <div class="bill-header">
             <div>
-              <span>本单位开票记录</span>
-            </div>
-            <div>
               <el-button
                 type="primary"
                 @click="addBill"
               >新增开票
               </el-button>
+            </div>
+            <div>
+              <span>本单位开票记录</span>
             </div>
           </div>
 
@@ -76,6 +76,7 @@
             border
             stripe
             size="small"
+            @row-click="getStep"
           >
             <el-table-column type="expand">
               <template>
@@ -85,11 +86,13 @@
                   class="demo-table-expand"
                 >
                   <el-timeline>
-                    <el-timeline-item
-                      v-for="(activity, index) in activities"
-                      :key="index"
-                    >
-                      {{ activity.content }}
+                    <el-timeline-item>
+                      <el-steps :active="active" finish-status="success">
+                        <el-step title="开票请求" />
+                        <el-step title="单位端审核通过" />
+                        <el-step title="财政端审核通过" />
+                        <el-step title="开票成功" />
+                      </el-steps>
                     </el-timeline-item>
                   </el-timeline>
                 </el-form>
@@ -142,16 +145,6 @@ export default {
       unitName: '福州市boss软件',
       // 票据列表
       billList: [],
-      activities: [{
-        content: '开票申请'
-      }, {
-        content: '通过单位审核'
-      }, {
-        content: '通过财政审核'
-      },
-      {
-        content: '开票成功'
-      }],
       // dialog显示
       visible: true,
       // 分页
@@ -168,7 +161,8 @@ export default {
       query: {
         currentPage: 1,
         pageSize: 1
-      }
+      },
+      active: 1
     }
   },
   created () {
@@ -191,10 +185,15 @@ export default {
     },
     // 提交查询条件
     async onSubmit () {
-      const res = await getOneBill(this.page.keyword)
-      console.log(res.records)
+      const billId = this.page.keyword
+      const res = await getOneBill(billId)
       if (res != null) {
-        this.billList = res.records
+        const newBillList = {
+          list: []
+        }
+        newBillList.list.push(res.data)
+        this.billList = newBillList.list
+        console.log(this.billList)
       }
     },
     // 调整每页显示条数
@@ -204,12 +203,6 @@ export default {
     // 修改当前页数
     handleCurrentChange (val) {
       this.page.currentPage = val
-    },
-    // 点击查看详情
-    handleClick (row) {
-      if (row.status === '未审验') {
-        this.$root.eventBus.$emit('visible', this.visible)
-      }
     },
     // ok
     handleSelectionChange () {
@@ -222,9 +215,14 @@ export default {
         // 打印预警信息
           this.$router.push({ name: 'ticket' })
         } else {
-          alert('预警信息')
+          this.$message(res.msg)
         }
       })
+    },
+    // 获取状态
+    getStep (row) {
+      console.log(row.fstate)
+      this.active = row.fstate
     }
   }
 }

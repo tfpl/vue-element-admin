@@ -148,7 +148,7 @@
 </template>
 
 <script>
-import { checkCrtListByPage, getCrtById, checkBatch, updateCrt, getAgenName } from '@/api/purchLicense'
+import { checkCrtListByPage, getCrtById, checkBatch, updateCrt, getAgenName } from '@/api/base/unitManager/purchLicense'
 // , updateCrt, checkBatch
 import { parseTime } from '@/utils/index'
 export default {
@@ -233,6 +233,7 @@ export default {
           isenable: ''
         }
       }
+      this.getTableData()
     },
     // 多选框选中数据
     handleSelectionChange (selection) {

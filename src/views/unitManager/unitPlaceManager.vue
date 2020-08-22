@@ -269,7 +269,7 @@
 
 <script>
 // import { listRole, addRole, updateRole } from '@/api/projectManager'
-import { addUnitPlace, getunitPlaceListByPage, updateUnitPlace, deleteUnitPlace, deleteUnitPlaceBatch } from '@/api/unitPlaceManager'
+import { addUnitPlace, getunitPlaceListByPage, updateUnitPlace, deleteUnitPlace, deleteUnitPlaceBatch } from '@/api/base/unitManager/unitPlaceManager'
 import { parseTime } from '@/utils/index'
 
 const defaultUnitPlace = {
@@ -356,19 +356,9 @@ export default {
     submitUpload () {
       this.$refs.upload.submit()
     },
-    handleRemove (file, fileList) {
-      console.log(file, fileList)
-    },
-    handlePreview (file) {
-      console.log(file)
-    },
     // 多选框选中数据
     handleSelectionChange (selection) {
       this.selectedList = selection
-      // this.ids = selection.map(item => item.itemName)
-      // console.log(this.ids)
-      // this.single = selection.length !== 1
-      // this.multiple = !selection.length
     },
     // 新增按钮
     handleAdd () {

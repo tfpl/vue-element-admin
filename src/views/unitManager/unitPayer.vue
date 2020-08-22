@@ -154,7 +154,7 @@ const defaultPayer = {
   version: 0
 }
 
-import { addPayer, listPayerByPage, removePayerBatch, removePayer, updatePayer } from '@/api/payer'
+import { addPayer, listPayerByPage, removePayerBatch, removePayer, updatePayer } from '@/api/base/unitManager/payer'
 import { parseTime, deepClone } from '@/utils/index'
 
 export default {
@@ -302,7 +302,7 @@ export default {
       })
     },
     parseTime (time) {
-      return parseTime(new Date(time))
+      return parseTime(new Date(time), '{y}-{m}-{d}')
     }
   }
 }

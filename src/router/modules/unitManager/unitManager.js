@@ -15,10 +15,25 @@ const unitManager = {
       meta: { title: '单位管理', icon: 'icon' }
     },
     {
+      path: 'unitManagerDetail/:id',
+      component: () => import('@/views/unitManager/unitManagerDetail'),
+      name: 'unitManagerDetail',
+      props: (route) => ({
+        id: route.params.id
+      }),
+      meta: { title: '单位管理详情(财政端)', icon: 'table' }
+    },
+    {
+      path: 'unitManagerDetailUnit',
+      component: () => import('@/views/unitManager/unitManagerDetailUnit'),
+      name: 'unitManagerDetailUnit',
+      meta: { title: '单位管理详情(单位端)', icon: 'table' }
+    },
+    {
       path: 'unitCheck',
       component: () => import('@/views/unitManager/unitCheck'),
       name: 'unitCheck',
-      meta: { title: '单位审核', icon: 'edit' }
+      meta: { title: '单位审核', icon: 'icon' }
     },
     {
       path: 'adminDepart',
@@ -36,7 +51,7 @@ const unitManager = {
       path: 'purchLicenseCheck',
       component: () => import('@/views/unitManager/purchLicenseCheck'),
       name: 'purchLicenseCheck',
-      meta: { title: '准购证审核', icon: 'edit' }
+      meta: { title: '准购证审核', icon: 'link' }
     },
     {
       path: 'unitPayer',
@@ -51,16 +66,23 @@ const unitManager = {
       meta: { title: '开票点管理', icon: 'icon' }
     },
     {
-      path: 'uninItemManager',
-      component: () => import('@/views/unitManager/unitItemManager'),
-      name: 'uninItemManager',
-      meta: { title: '可用项目', icon: 'icon' }
+      path: 'projectGroup',
+      component: () => import('@/views/projectManager/projectGroup'),
+      name: 'projectGroup',
+      meta: { title: '项目分组', icon: 'link' },
+      roles: ['admin']
     },
     {
       path: 'unitBillManager',
       component: () => import('@/views/unitManager/unitBillManager'),
       name: 'unitBillManager',
-      meta: { title: '可用票据', icon: 'icon' }
+      meta: { title: '可用票据', icon: 'edit' }
+    },
+    {
+      path: 'unitItemManager',
+      component: () => import('@/views/unitManager/unitItemManager'),
+      name: 'unitItemManager',
+      meta: { title: '可用项目', icon: 'edit' }
     }
   ]
 }

@@ -32,7 +32,7 @@
                 index="3"
                 class="el-icon-paperclip"
                 @click="insertBill"
-              >保存</el-menu-item>
+              >提交</el-menu-item>
               <el-submenu index="2">
                 <template slot="title">开票通知</template>
                 <el-menu-item
@@ -233,7 +233,8 @@
 </template>
 <script>
 import {
-  addBill
+  addBill,
+  getBill
 } from '@/api/qiuhengGroupApi/billInvoicing/bill'
 import projectDialog from '@/views/qiuhengGroupViews/bill-invoicing/ProjectDialog.vue'
 export default {
@@ -258,9 +259,9 @@ export default {
       },
       // 票据模块
       uneCbillDto: {
-        fBillId: '201700000001',
-        fBillNo: 'NO.6666666',
-        fType: '',
+        fBillId: '01160201',
+        fBillNo: '0000000015',
+        fType: '福州市非税收入票据（电子）',
         checkCode: ''
       },
       // 项目组模块
@@ -291,8 +292,15 @@ export default {
       this.amt = val
       console.log(this.amt)
     })
+    this.getBill()
   },
   methods: {
+    // 获取可用票据
+    async getBill () {
+      const res = await getBill()
+      console.log(res)
+    },
+    // 新增开票
     async insertBill () {
       const batchPojo = {
         unitName: '',
@@ -308,9 +316,12 @@ export default {
       batchPojo.fAmt = this.amt
       console.log(batchPojo.fAmt)
       console.log(batchPojo.itemDtos)
+      this.$root.eventBus.$emit('batchPojo', batchPojo)
       const res = await addBill(batchPojo)
-      alert(res.msg)
-      this.$router.push({ name: 'bill' })
+      if (res.msg === 'OK') {
+        this.$message('已提交开票请求')
+      }
+      this.$router.push({ name: 'paybook' })
     },
     // 移除项目
     deleteRow (index, rows) {
