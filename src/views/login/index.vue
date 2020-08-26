@@ -2,7 +2,7 @@
   <div class="login-container">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">用户登录</h3>
       </div>
 
       <el-form-item prop="username">
@@ -22,16 +22,18 @@
         </span>
       </el-form-item>
 
+      <el-form-item prop="verify">
+        <span class="svg-container">
+          <svg-icon icon-class="edit" />
+        </span>
+        <el-input v-model="loginForm.verifyCode" placeholder="验证码" name="verifycode" type="text" tabindex="1" auto-complete="off" />
+        <span class="verify">
+          <verify-code v-model="verifyCode" />
+        </span>
+      </el-form-item>
+
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
 
-      <div class="tips">
-
-        <div style="margin-right:20px;">管理员: admin</div>
-        <div style="margin-right:20px;">财政端: financial</div>
-        <div style="margin-right:20px;">财政端审核: financial_check</div>
-        <div style="margin-right:20px;">单位端: unit</div>
-        <div>密码: any</div>
-      </div>
     </el-form>
   </div>
 </template>
@@ -39,9 +41,13 @@
 <script>
 // import { getRSAPublicKey, addRSAPublicKey } from '@/utils/encryption'
 import { getToken } from '@/utils/auth'
+import VerifyCode from '@/components/VerifyCode'
 
 export default {
   name: 'Login',
+  components: {
+    VerifyCode
+  },
   data () {
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
@@ -53,7 +59,8 @@ export default {
     return {
       loginForm: {
         username: '',
-        password: '111111'
+        password: '',
+        verifyCode: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur' }],
@@ -64,7 +71,8 @@ export default {
       loading: false,
       passwordType: 'password',
       redirect: undefined,
-      otherQuery: {}
+      otherQuery: {},
+      verifyCode: ''
     }
   },
   watch: {
@@ -99,6 +107,11 @@ export default {
       })
     },
     handleLogin () {
+      if (this.verifyCode.toUpperCase() !== this.loginForm.verifyCode.toUpperCase()) {
+        this.$message.error('验证码错误！')
+        return
+      }
+
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true
@@ -236,7 +249,7 @@ $light_gray: #eee;
     position: relative;
 
     .title {
-      font-size: 26px;
+      font-size: 23px;
       color: $light_gray;
       margin: 0px auto 40px auto;
       text-align: center;
@@ -252,6 +265,12 @@ $light_gray: #eee;
     color: $dark_gray;
     cursor: pointer;
     user-select: none;
+  }
+
+  .verify {
+    position: absolute;
+    right: 6px;
+    top: 6px;
   }
 }
 </style>
